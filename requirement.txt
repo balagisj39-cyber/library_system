@@ -1,1 +1,3 @@
 
+# Python Standard Library only (sqlite3, os, datetime)
+# No external pip packages required.
