@@ -30,14 +30,14 @@ Type `cd` followed by the path to your project folder, then press `Enter`.
 ```cmd
 cd C:\Users\YourName\Downloads\library_system-main
 
-Step 3: Install Required Dependencies
+### Step 3: Install Required Dependencies
 Copy and paste this command into your terminal, then press Enter:
         [py -m pip install -r requirements.txt]
     (On Mac/Linux, use python3 instead of py)
 
     This installs the necessary background software (pandas, openpyxl, and streamlit).
 
-Step 4: Load the 200 Books into the Database
+### Step 4: Load the 200 Books into the Database
 Run this command once to read books.xlsx and load all 200 books into your database:
          [py import_books.py]
     
@@ -45,10 +45,10 @@ You should see a message saying:
      
      [SUCCESS] Successfully imported 200 books into 'library.db'!
 
-Step 5: Launch the Application
+### Step 5: Launch the Application
 You can use the application in two ways:
 
-🌐 Option A: Interactive Web UI (Recommended)
+## 🌐 Option A: Interactive Web UI (Recommended)
 To open the graphical web dashboard in your browser, run:
           [py -m streamlit run app.py]
 
@@ -56,12 +56,12 @@ To open the graphical web dashboard in your browser, run:
 2.A new tab will automatically open in your web browser at http://localhost:8501.
 3.Use the left sidebar to switch between Neon Dark and Classic Light themes or navigate between modules!
 
-💻 Option B: Command Line Interface (CLI)
+## 💻 Option B: Command Line Interface (CLI)
 If you prefer running the program inside your terminal, run:
            [py library.py]
 
 
-📖 How to Use the Web Application:
+#📖 How to Use the Web Application:
 
 📊 Dashboard & Search: Search for books by title, author, or subject (e.g., type Physics,   Dune, or Cal Newport).
 👤 Student Directory: Register a new student with their name and email.   
@@ -78,3 +78,4 @@ If you prefer running the program inside your terminal, run:
 ├── schema.sql          # Database table structure and performance indexes
 ├── requirements.txt    # List of required external packages
 └── README.md           # Beginner-friendly instructions
+
