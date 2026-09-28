@@ -17,7 +17,6 @@ def init_db():
         print(f"[ERROR] {SCHEMA_FILE} not found in directory.")
         return
 
-    # errors="ignore" ensures non-ASCII bytes don't crash Windows
     with open(SCHEMA_FILE, "r", encoding="utf-8", errors="ignore") as f:
         schema_script = f.read()
 
@@ -66,14 +65,14 @@ def search_books(query: str):
 
         print("\n--- Search Results ---")
         for b in books:
-            status = "Available" if b["is_available"] == 1 else "Issued"
+            status = "Available" if b["is_available"] == 1 else "Issued (Unavailable)"
             print(f"ID: {b['book_id']} | Title: {b['title']} | Author: {b['author']} | Category: {b['category']} | Status: {status}")
 
 def issue_book(student_id: int, book_id: int, days_allowed: int = 14):
     with get_connection() as conn:
         cursor = conn.cursor()
 
-        # Check student existence & active borrowing limit
+        # 1. Check student existence & active borrowing limit
         cursor.execute("SELECT name, max_limit FROM students WHERE student_id = ?", (student_id,))
         student = cursor.fetchone()
         if not student:
@@ -90,17 +89,17 @@ def issue_book(student_id: int, book_id: int, days_allowed: int = 14):
             print(f"[ERROR] Student '{student['name']}' has reached their borrowing limit of {student['max_limit']} books.")
             return
 
-        # Check book availability
+        # 2. FEATURE: Prevent borrowing an unavailable book
         cursor.execute("SELECT title, is_available FROM books WHERE book_id = ?", (book_id,))
         book = cursor.fetchone()
         if not book:
             print("[ERROR] Book ID not found.")
             return
         if book["is_available"] == 0:
-            print(f"[ERROR] Book '{book['title']}' is currently issued to another student.")
+            print(f"[DENIED] Book '{book['title']}' is currently UNAVAILABLE (already borrowed by another student).")
             return
 
-        # Issue book
+        # 3. FEATURE: Track issue date & due date
         issue_date = date.today().isoformat()
         due_date = date.fromordinal(date.today().toordinal() + days_allowed).isoformat()
 
@@ -111,7 +110,7 @@ def issue_book(student_id: int, book_id: int, days_allowed: int = 14):
 
         cursor.execute("UPDATE books SET is_available = 0 WHERE book_id = ?", (book_id,))
         conn.commit()
-        print(f"[OK] Book '{book['title']}' successfully issued to {student['name']}. Due Date: {due_date}")
+        print(f"[OK] Book '{book['title']}' issued to {student['name']}.\n     Issued On: {issue_date} | Due Date: {due_date}")
 
 def return_book(book_id: int, fine_rate_per_day: float = 5.0):
     with get_connection() as conn:
@@ -130,6 +129,7 @@ def return_book(book_id: int, fine_rate_per_day: float = 5.0):
             print("[ERROR] Active issue record not found for this Book ID.")
             return
 
+        # FEATURE: Track return date
         return_date = date.today()
         due_date = date.fromisoformat(issue["due_date"])
         overdue_days = (return_date - due_date).days
@@ -144,7 +144,7 @@ def return_book(book_id: int, fine_rate_per_day: float = 5.0):
         cursor.execute("UPDATE books SET is_available = 1 WHERE book_id = ?", (book_id,))
         conn.commit()
 
-        print(f"[OK] Book '{issue['book_title']}' returned by {issue['student_name']}.")
+        print(f"[OK] Book '{issue['book_title']}' returned by {issue['student_name']} on {return_date.isoformat()}.")
         if fine > 0:
             print(f"[WARNING] Overdue by {overdue_days} days. Fine Amount: Rs.{fine:.2f}")
 
@@ -166,7 +166,29 @@ def list_borrowed_books():
 
         print("\n--- Currently Borrowed Books ---")
         for r in records:
-            print(f"Issue ID: {r['issue_id']} | Book: {r['title']} | Borrowed By: {r['student_name']} | Due: {r['due_date']}")
+            print(f"Issue ID: {r['issue_id']} | Book: {r['title']} | Borrowed By: {r['student_name']} | Issue Date: {r['issue_date']} | Due Date: {r['due_date']}")
+
+def show_full_audit_history():
+    """Shows complete log of all issue and return dates."""
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT i.issue_id, b.title, s.name AS student_name, i.issue_date, i.due_date, i.return_date, i.fine_amount
+            FROM issues i
+            JOIN books b ON i.book_id = b.book_id
+            JOIN students s ON i.student_id = s.student_id
+            ORDER BY i.issue_id DESC
+        """)
+        records = cursor.fetchall()
+
+        if not records:
+            print("\nNo transaction history found.")
+            return
+
+        print("\n--- Complete Issue & Return Date History ---")
+        for r in records:
+            ret = r['return_date'] if r['return_date'] else "NOT RETURNED YET"
+            print(f"Tx #{r['issue_id']} | Book: {r['title']} | Student: {r['student_name']} | Issued: {r['issue_date']} | Due: {r['due_date']} | Returned: {ret} | Fine: Rs.{r['fine_amount']}")
 
 # --- Interactive Terminal Menu ---
 
@@ -177,12 +199,13 @@ def main():
         print("1. Register Student")
         print("2. Add Book")
         print("3. Search Books")
-        print("4. Issue Book")
-        print("5. Return Book")
+        print("4. Issue Book (Checks Availability & Limits)")
+        print("5. Return Book (Records Return Date & Fines)")
         print("6. Show Currently Borrowed Books")
-        print("7. Exit")
+        print("7. Show Full Date Audit Log")
+        print("8. Exit")
 
-        choice = input("Select an option (1-7): ").strip()
+        choice = input("Select an option (1-8): ").strip()
 
         if choice == "1":
             name = input("Enter Student Name: ").strip()
@@ -212,6 +235,8 @@ def main():
         elif choice == "6":
             list_borrowed_books()
         elif choice == "7":
+            show_full_audit_history()
+        elif choice == "8":
             print("Exiting System. Goodbye!")
             break
         else:
