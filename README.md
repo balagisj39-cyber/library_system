@@ -1,93 +1,80 @@
 # 📚 Mini Library Management System
 
-A normalized relational database layer, interactive Web UI, and CLI application built for **Task 6 (WebX Selection Tasks 2026–27)**.
+Welcome to the **Mini Library Management System**! 
+
+This application allows you to search a database of 200+ books, register students, issue books, process returns with automatic fine calculation, and track borrowing logs using a web interface or terminal.
 
 ---
 
-## 🌟 Overview
+## 📌 Prerequisites (Before You Start)
 
-The **Mini Library Management System** provides an end-to-end solution for managing college library operations. It features a normalized SQLite database engine, business rule validation, automatic fine calculations, a bulk Excel import pipeline, and a modern, dual-themed **Streamlit** web application.
+Before running this project, ensure you have **Python** installed on your computer.
 
----
-
-## ✨ Features
-
-- **Normalized Schema**: Relational database design (`students`, `books`, `issues`) enforcing foreign key constraints and atomic SQL operations.
-- **Dual-Themed Streamlit Web UI**: Interactive dashboard featuring KPI metrics, dynamic search, tabbed forms, and a **Theme Switcher** (Neon Dark & Classic Light mode).
-- **Terminal CLI Interface**: Full-featured command-line application for terminal-only environments.
-- **Bulk Excel Import**: Built-in import script (`import_books.py`) using `pandas` and `openpyxl` to populate 200+ pre-formatted books from `books.xlsx` into `library.db`.
-- **Smart Subject Search**: Case-insensitive partial matching and automatic keyword/stem expansion (e.g., Physics, Mathematics, CS).
-- **Business Rule Enforcement**:
-  - Blocks issuing unavailable or already borrowed books.
-  - Checks active borrowing limits per student (default limit: 3 books).
-  - Prevents race conditions using atomic SQL queries.
-- **Dynamic Fine Calculation**: Calculates overdue days upon return and applies fine rates (default: Rs. 5.00/day).
-- **Audit Logging & Analytics**: Live transaction logs and top borrowed book insights.
+1. Download and install Python from [python.org](https://www.python.org/downloads/).
+2. During installation, make sure to check the box that says **"Add Python to PATH"**.
 
 ---
 
-## 🗄️ Database Schema & Architecture (`schema.sql`)
+## 🚀 How to Run the Project (Step-by-Step)
 
-The database consists of three core tables:
-
-- **`students`**: Stores student profiles, contact details, and borrowing limits.
-- **`books`**: Tracks catalog inventory and availability status (`is_available`).
-- **`issues`**: Junction table tracking active loans, issue/due dates, return dates, and fine amounts.
-+------------------+         +------------------+         +------------------+
-|     students     |         |      issues      |         |      books       |
-+------------------+         +------------------+         +------------------+
-| student_id (PK)  |<-------1| issue_id (PK)    |1------->| book_id (PK)     |
-| name             |         | student_id (FK)  |         | title            |
-| email (UNIQUE)   |         | book_id (FK)     |         | author           |
-| max_limit        |         | issue_date       |         | category         |
-+------------------+         | due_date         |         | is_available     |
-                             | return_date      |         +------------------+
-                             | fine_amount      |
-                             +------------------+
-
-### Performance Index        
-Includes database indexes on frequent search fields (`title`, `author`, `category`) and foreign key columns (`student_id`, `book_id`) for fast lookups.
+### Step 1: Open Your Terminal or Command Prompt
+- **Windows**: Press the `Windows Key`, type `cmd`, and press `Enter`.
+- **Mac**: Press `Cmd + Space`, type `Terminal`, and press `Enter`.
 
 ---
 
-## 🛠️ Installation & Setup
+### Step 2: Navigate to the Project Folder
+Type `cd` followed by the path to your project folder, then press `Enter`.
 
-### 1. Clone the Repository
-```bash
-git clone [https://github.com/your-username/library_system.git]
-           (https://github.com/your-username/library_system.git)
-cd library_system
-2. Install Dependencies
-Install all required external packages listed in requirements.txt
-    Bash
-    py -m pip install -r requirements.txt
+*Example for Windows:*
+```cmd
+cd C:\Users\YourName\Downloads\library_system-main
 
-📂 Step 1: Import Dataset into Database
-Populate library.db with the 200 catalog books from books.xlsx:
-   Bash
-   py import_books.py
-Expected Output: [SUCCESS] Successfully imported 200 books into 'library.db'!
-💻 How to RunOption A: 
- Launch Web UI (Streamlit — Recommended)
- Run the browser-based dashboard:
- Bash
- py -m streamlit run app.py
-Opens automatically at http://localhost:8501. Use the sidebar to switch between Neon Dark and Classic Light mode!
-Option B: Launch Terminal CLIRun the command-line interface:
-Bash
-py library.py
-🧪 Quick Walkthrough
-1.Register Student: Go to Student Directory and add a student (e.g., Name: John Doe, Email: john@example.com).
-2.Search Catalog: Search for topics like Physics, Mathematics, or Deep Work to get corresponding Book IDs.
-3.Issue Book: Go to Issue Book, enter Student ID (1) and Book ID (1).
-4.Return Book: Enter Book ID (1) in Return Book to complete the loan and calculate any overdue fines.
-5.Audit Logs: View live active loans and full transaction history under Transaction Audit Log.
+Step 3: Install Required Dependencies
+Copy and paste this command into your terminal, then press Enter:
+        [py -m pip install -r requirements.txt]
+    (On Mac/Linux, use python3 instead of py)
 
-📁 Repository Structure
-├── app.py              # Streamlit Web UI application
-├── library.py          # SQLite database logic & Terminal CLI menu
-├── import_books.py     # Bulk import script for books.xlsx
-├── books.xlsx          # Dataset containing 200 books
-├── schema.sql          # Table definitions & performance indexes
-├── requirements.txt    # Python package dependencies
-└── README.md           # Project documentation
+    This installs the necessary background software (pandas, openpyxl, and streamlit).
+
+Step 4: Load the 200 Books into the Database
+Run this command once to read books.xlsx and load all 200 books into your database:
+         [py import_books.py]
+    
+You should see a message saying:
+     
+     [SUCCESS] Successfully imported 200 books into 'library.db'!
+
+Step 5: Launch the Application
+You can use the application in two ways:
+
+🌐 Option A: Interactive Web UI (Recommended)
+To open the graphical web dashboard in your browser, run:
+          [py -m streamlit run app.py]
+
+1.If Streamlit asks for an email on its first run, simply press Enter to skip it.
+2.A new tab will automatically open in your web browser at http://localhost:8501.
+3.Use the left sidebar to switch between Neon Dark and Classic Light themes or navigate between modules!
+
+💻 Option B: Command Line Interface (CLI)
+If you prefer running the program inside your terminal, run:
+           [py library.py]
+
+
+📖 How to Use the Web Application:
+
+📊 Dashboard & Search: Search for books by title, author, or subject (e.g., type Physics,   Dune, or Cal Newport).
+👤 Student Directory: Register a new student with their name and email.   
+📖 Issue Book: Enter a Student ID and a Book ID to issue a book. The system automatically enforces borrowing limits.   
+🔄 Return Book: Enter a Book ID to process a return. Overdue fines are calculated automatically if the book is returned past its due date.   
+📋 Transaction Audit Log: View active loans and complete borrowing history.
+
+📁 Repository Structure:
+
+├── app.py              # Interactive Web Interface (Streamlit)
+├── library.py          # Core database logic & Command Line menu
+├── import_books.py     # Excel dataset importer script
+├── books.xlsx          # Dataset containing 200 catalog books
+├── schema.sql          # Database table structure and performance indexes
+├── requirements.txt    # List of required external packages
+└── README.md           # Beginner-friendly instructions
