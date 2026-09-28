@@ -53,9 +53,9 @@ You can use the application in two ways:
 To open the graphical web dashboard in your browser, run:
          ``` py -m streamlit run app.py```
 
-1.If Streamlit asks for an email on its first run, simply press Enter to skip it.
-2.A new tab will automatically open in your web browser at http://localhost:8501.
-3.Use the left sidebar to switch between Neon Dark and Classic Light themes or navigate between modules!
+1.If Streamlit asks for an email on its first run, simply press Enter to skip it.                                                     
+2.A new tab will automatically open in your web browser at http://localhost:8501.                                      
+3.Use the left sidebar to switch between Neon Dark and Classic Light themes or navigate between modules!                                
 
 ## 💻 Option B: Command Line Interface (CLI)
 If you prefer running the program inside your terminal, run:
