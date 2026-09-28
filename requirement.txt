@@ -1,3 +1,5 @@
 
 # Python Standard Library only (sqlite3, os, datetime)
-# No external pip packages required.
+#pandas>=2.0.0
+#openpyxl>=3.1.0
+#streamlit>=1.28.0
