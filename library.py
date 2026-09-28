@@ -52,18 +52,40 @@ def add_book(title: str, author: str, category: str):
 def search_books(query: str):
     with get_connection() as conn:
         cursor = conn.cursor()
-        q = f"%{query}%"
-        cursor.execute("""
-            SELECT * FROM books 
-            WHERE title LIKE ? OR author LIKE ? OR category LIKE ?
-        """, (q, q, q))
+        
+        raw_query = query.strip().lower()
+        if not raw_query:
+            print("[!] Please enter a search query.")
+            return
+
+        # Subject stem/synonym expansions
+        search_terms = {raw_query}
+
+        if "physics" in raw_query or "physic" in raw_query:
+            search_terms.update(["physic", "physics", "quantum", "thermodynamic", "mechanic", "astrophysic", "optics"])
+        elif "math" in raw_query or "mathematics" in raw_query:
+            search_terms.update(["math", "mathematic", "algebra", "geometry", "calculus", "topology"])
+        elif "cs" in raw_query or "computer" in raw_query or "programming" in raw_query:
+            search_terms.update(["computer", "programming", "software", "data", "algorithm", "code"])
+
+        # Build dynamic SQL query for partial keyword matching
+        where_clauses = []
+        params = []
+        for term in search_terms:
+            pattern = f"%{term}%"
+            where_clauses.append("(LOWER(title) LIKE ? OR LOWER(author) LIKE ? OR LOWER(category) LIKE ?)")
+            params.extend([pattern, pattern, pattern])
+
+        sql = f"SELECT * FROM books WHERE {' OR '.join(where_clauses)}"
+        
+        cursor.execute(sql, params)
         books = cursor.fetchall()
 
         if not books:
-            print("No matching books found.")
+            print(f"\n[!] No matching books found for '{query}'.")
             return
 
-        print("\n--- Search Results ---")
+        print(f"\n--- Search Results for '{query}' ({len(books)} found) ---")
         for b in books:
             status = "Available" if b["is_available"] == 1 else "Issued (Unavailable)"
             print(f"ID: {b['book_id']} | Title: {b['title']} | Author: {b['author']} | Category: {b['category']} | Status: {status}")
