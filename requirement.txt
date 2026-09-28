@@ -1,5 +1,10 @@
 
-# Python Standard Library only (sqlite3, os, datetime)
-#pandas>=2.0.0
-#openpyxl>=3.1.0
-#streamlit>=1.28.0
+## 📦 Required Packages (`requirements.txt`)
+
+This project relies on the following external Python packages:
+
+- **`pandas>=2.0.0`**: Used to load, filter, and display data tables cleanly in both the Excel import script and the Web UI.
+- **`openpyxl>=3.1.0`**: Required by Pandas to read and parse the `.xlsx` dataset file (`books.xlsx`).
+- **`streamlit>=1.28.0`**: Powers the interactive graphical Web UI and dashboard.
+
+*(Note: Standard Python libraries used in this project—`sqlite3`, `os`, and `datetime`—are built directly into Python and do not need external installation).*
