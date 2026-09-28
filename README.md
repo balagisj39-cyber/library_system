@@ -65,22 +65,21 @@ If you prefer running the program inside your terminal, run:
 ```##📖 How to Use the Web Application:```
 
 ```#📊 Dashboard & Search:```
-      Search for books by title, author, or subject (e.g., type Physics,   Dune, or Cal Newport).
-```#👤 Student Directory:```
-       Register a new student with their name and email.   
-```#📖 Issue Book:```
-       Enter a Student ID and a Book ID to issue a book. The system automatically enforces borrowing limits.   
-```#🔄 Return Book:```
-       Enter a Book ID to process a return. Overdue fines are calculated automatically if the book is returned past its due date.   
-```#📋 Transaction Audit Log:```
-       View active loans and complete borrowing history.
+      Search for books by title, author, or subject (e.g., type Physics,   Dune, or Cal Newport).                                          
+```#👤 Student Directory:```                                 
+       Register a new student with their name and email.                                        
+```#📖 Issue Book:```                                                                     
+       Enter a Student ID and a Book ID to issue a book. The system automatically enforces borrowing limits.                                   
+```#🔄 Return Book:```                                                                                     
+       Enter a Book ID to process a return. Overdue fines are calculated automatically if the book is returned past its due date.                ```#📋 Transaction Audit Log:```                                                         
+       View active loans and complete borrowing history.                                                          
 
 ```##📁 Repository Structure:```
 
-├── app.py              # Interactive Web Interface (Streamlit)
-├── library.py          # Core database logic & Command Line menu
-├── import_books.py     # Excel dataset importer script
-├── books.xlsx          # Dataset containing 200 catalog books
-├── schema.sql          # Database table structure and performance indexes
-├── requirements.txt    # List of required external packages
-└── README.md           # Beginner-friendly instructions
+├── app.py              # Interactive Web Interface (Streamlit)                                                 
+├── library.py          # Core database logic & Command Line menu                                                    
+├── import_books.py     # Excel dataset importer script                                                           
+├── books.xlsx          # Dataset containing 200 catalog books                                                   
+├── schema.sql          # Database table structure and performance indexes                                              
+├── requirements.txt    # List of required external packages                                                            
+└── README.md           # Beginner-friendly instructions                                                                        
