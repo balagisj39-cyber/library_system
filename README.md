@@ -104,4 +104,5 @@ If you prefer running the program inside your terminal, run:
 ├── books.xlsx          # Dataset containing 200 catalog books                                                   
 ├── schema.sql          # Database table structure and performance indexes                                              
 ├── requirements.txt    # List of required external packages                                                            
-└── README.md           # Beginner-friendly instructions                                                                        
+└── README.md           # Beginner-friendly instructions                                                                                   
+├── .gitignore          # Prevents tracking of venv/ and local database files
