@@ -36,8 +36,8 @@ Creating a virtual environment ensures clean dependency isolation:
 1. Create the virtual environment:                                                                                                
                                                                                                                  
 Bash                                                                                                                                  
-`py -m venv venv`
-(On Mac/Linux, use python3 -m venv venv)                                                                                                
+`py -m venv venv`                                                                                                                        
+(On Mac/Linux, use `python3 -m venv venv`)                                                                                                
 2. Activate it:                                                                                                                        
 * Windows (Command Prompt):                                                                                                   
 DOS                                                                                                                                   
