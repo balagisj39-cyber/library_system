@@ -1,8 +1,54 @@
+import os
+
 import streamlit as st
 import sqlite3
 import pandas as pd
 from datetime import date, timedelta
+import streamlit as st
+import sqlite3
+import pandas as pd
+import os
+import streamlit as st
+import sqlite3
+import pandas as pd
+import os
 
+# =========================================================
+# AUTO-INITIALIZE ALL DATABASE TABLES IF MISSING
+# =========================================================
+def init_db():
+    """Ensures all required tables exist in library.db."""
+    conn = sqlite3.connect("library.db")
+    cursor = conn.cursor()
+    
+    # Check all required tables
+    required_tables = ["students", "books", "issues"]  # Change "issues" to "transactions" if that's what your schema uses
+    
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    existing_tables = [row[0] for row in cursor.fetchall()]
+    
+    # If any required table is missing, execute schema.sql
+    if not all(table in existing_tables for table in required_tables):
+        if os.path.exists("schema.sql"):
+            with open("schema.sql", "r", encoding="utf-8") as f:
+                conn.executescript(f.read())
+            conn.commit()
+            print("[INFO] Database schema successfully applied from schema.sql!")
+            
+    conn.close()
+
+# Execute check before Streamlit runs any queries
+init_db()
+# =========================================================
+
+
+def init_db():
+    if not os.path.exists("library.db") or os.path.getsize("library.db") == 0:
+        if os.path.exists("schema.sql"):
+            conn = sqlite3.connect("library.db")
+            with open("schema.sql", "r", encoding="utf-8") as f:
+                conn.executescript(f.read())
+            conn.close() 
 DB_NAME = "library.db"
 
 def get_connection():
