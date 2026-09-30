@@ -30,7 +30,29 @@ Type `cd` followed by the path to your project folder, then press `Enter`.
 ```cmd
 cd C:\Users\YourName\Downloads\library_system-main
 ```
-### Step 3: Install Required Dependencies
+
+### Step 3: Create & Activate a Virtual Environment
+Creating a virtual environment ensures clean dependency isolation:
+1. Create the virtual environment:                                                                                                
+                                                                                                                 
+Bash                                                                                                                                  
+`py -m venv venv`
+(On Mac/Linux, use python3 -m venv venv)                                                                                                
+2. Activate it:                                                                                                                        
+* Windows (Command Prompt):                                                                                                   
+DOS                                                                                                                                   
+`venv\Scripts\activate`
+
+Windows (PowerShell):
+* PowerShell
+`.\venv\Scripts\Activate.ps1`                                                                                                              
+                                                                                                                                   
+* Mac / Linux:                                                                                                                             
+Bash                                                                                                                               
+`source venv/bin/activate`                                                                                                           
+💡 Tip: You will know it is activated when (venv) appears at the start of your terminal prompt line!                                     
+
+### Step 4: Install Required Dependencies
 Copy and paste this command into your terminal, then press Enter:
      BASH                                                                                                                            
         `py -m pip install -r requirements.txt`                                                                                
@@ -38,7 +60,7 @@ Copy and paste this command into your terminal, then press Enter:
 
     This installs the necessary background software (pandas, openpyxl, and streamlit).
 
-### Step 4: Load the 200 Books into the Database
+### Step 5: Load the 200 Books into the Database
 Run this command once to read books.xlsx and load all 200 books into your database:
          ```py import_books.py```
     
@@ -46,7 +68,7 @@ You should see a message saying:
      
      [SUCCESS] Successfully imported 200 books into 'library.db'!
 
-### Step 5: Launch the Application
+### Step 6: Launch the Application
 You can use the application in two ways:
 
 ## 🌐 Option A: Interactive Web UI (Recommended)
