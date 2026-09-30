@@ -32,9 +32,9 @@ cd C:\Users\YourName\Downloads\library_system-main
 ```
 ### Step 3: Install Required Dependencies
 Copy and paste this command into your terminal, then press Enter:
-     BASH
-        py -m pip install -r requirements.txt
-    (On Mac/Linux, use python3 instead of py)
+     BASH                                                                                                                            
+        `py -m pip install -r requirements.txt`                                                                                
+    (On Mac/Linux, use python3 instead of py)                                                                                            
 
     This installs the necessary background software (pandas, openpyxl, and streamlit).
 
