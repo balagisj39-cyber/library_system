@@ -5,6 +5,30 @@ from datetime import date
 DB_NAME = "library.db"
 SCHEMA_FILE = "schema.sql"
 
+def init_db():
+    """Ensures all required tables exist in library.db."""
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    # List all required tables defined in your schema.sql
+    required_tables = ["students", "books", "issues"]  # Change "issues" to "transactions" if that's what your schema uses
+    
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    existing_tables = [row[0] for row in cursor.fetchall()]
+    
+    # Rebuild schema if ANY required table is missing
+    if not all(table in existing_tables for table in required_tables):
+        if os.path.exists(SCHEMA_FILE):
+            with open(SCHEMA_FILE, "r", encoding="utf-8") as f:
+                conn.executescript(f.read())
+            conn.commit()
+            print("[INFO] Database schema successfully applied from schema.sql!")
+            
+    conn.close()
+
+# Call the function to run the check immediately on startup
+init_db()
+
 def get_connection():
     conn = sqlite3.connect(DB_NAME)
     conn.execute("PRAGMA foreign_keys = ON;")
