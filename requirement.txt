@@ -1,13 +1,4 @@
 
-# create_requirements.py
-
-dependencies = [
-    "pandas>=2.0.0\n",
-    "openpyxl>=3.1.0\n",
-    "streamlit>=1.28.0\n"
-]
-
-with open("requirements.txt", "w", encoding="utf-8") as f:
-    f.writelines(dependencies)
-
-print("✅ 'requirements.txt' created successfully!")
+pandas>=2.0.0
+openpyxl>=3.1.0
+streamlit>=1.28.0
