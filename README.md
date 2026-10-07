@@ -44,7 +44,7 @@ DOS
 `venv\Scripts\activate`
 
 Windows (PowerShell):
-* PowerShell
+* PowerShell                                                                                                                          
 `.\venv\Scripts\Activate.ps1`                                                                                                              
                                                                                                                                    
 * Mac / Linux:                                                                                                                             
