@@ -86,12 +86,16 @@ If you prefer running the program inside your terminal, run:
 
 ```##📖 How to Use the Web Application:```
 
-```#📊 Dashboard & Search:```
+```#📊 Dashboard & Search:```                                                                                                         
       Search for books by title, author, or subject (e.g., type Physics,   Dune, or Cal Newport).                                          
 ```#👤 Student Directory:```                                 
        Register a new student with their name and email.                                        
 ```#📖 Issue Book:```                                                                     
-       Enter a Student ID and a Book ID to issue a book. The system automatically enforces borrowing limits.                                   
+       Enter a Student ID and a Book ID to issue a book. The system automatically enforces borrowing limits.  
+```➕ Add New Book:```                                                                                                                     
+        Adds a new book in the list.                                                                                                 
+```🗑️ Remove Book:```                                                                                                                  
+        Removes the book you selected from the list.                                                                                  
 ```#🔄 Return Book:```                                                                                     
        Enter a Book ID to process a return. Overdue fines are calculated automatically if the book is returned past its due date.                ```#📋 Transaction Audit Log:```                                                         
        View active loans and complete borrowing history.                                                          
