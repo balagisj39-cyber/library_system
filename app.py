@@ -6,6 +6,7 @@ import pandas as pd
 from datetime import date, timedelta
 
 
+
 # =========================================================
 # AUTO-INITIALIZE ALL DATABASE TABLES IF MISSING
 # =========================================================
@@ -253,6 +254,7 @@ menu = [
     "🔄 Return Book",
     "👤 Student Directory",
     "➕ Add New Book",
+    "🗑️ Remove Book",
     "📋 Transaction Audit Log"
 ]
 choice = st.sidebar.radio("Navigation Menu", menu, label_visibility="collapsed")
@@ -438,8 +440,45 @@ elif choice == "➕ Add New Book":
                 st.success(f"✅ Successfully added '{title}' with Book ID: **{cursor.lastrowid}**")
         else:
             st.warning("Please fill in all fields.")
+  # --- 6. Remove Book ---
+elif choice == "🗑️ Remove Book":
+    st.subheader("🗑️ Remove Book from Catalog")
+    
+    # Show a quick reference table of books so the user can see IDs
+    with get_connection() as conn:
+        df_books = pd.read_sql_query("""
+            SELECT book_id AS 'Book ID', title AS 'Title', author AS 'Author', 
+                   category AS 'Category', 
+                   CASE WHEN is_available = 1 THEN 'Available' ELSE 'Issued (Unavailable)' END AS 'Status' 
+            FROM books
+        """, conn)
+        st.dataframe(df_books, use_container_width=True)
 
-# --- 6. Transaction Audit Log ---
+    st.markdown("---")
+    book_id_to_remove = st.number_input("Enter Book ID to Remove", min_value=1, step=1)
+
+    if st.button("🗑️ Delete Book", type="primary"):
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            
+            # 1. Check if the book exists and its availability
+            cursor.execute("SELECT title, is_available FROM books WHERE book_id = ?", (book_id_to_remove,))
+            book = cursor.fetchone()
+            
+            if not book:
+                st.error("❌ Book ID not found in database.")
+            elif book["is_available"] == 0:
+                st.error(f"❌ Cannot remove '{book['title']}' because it is currently issued to a student.")
+            else:
+                try:
+                    # 2. Safely delete the book
+                    cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id_to_remove,))
+                    conn.commit()
+                    st.success(f"✅ Successfully removed '{book['title']}' (ID: {book_id_to_remove}) from the catalog.")
+                except sqlite3.IntegrityError:
+                    st.error("❌ Cannot delete this book because it has active foreign key dependencies.")
+
+# --- 7. Transaction Audit Log ---
 elif choice == "📋 Transaction Audit Log":
     st.subheader("📋 Complete Audit History")
     
@@ -470,3 +509,5 @@ elif choice == "📋 Transaction Audit Log":
                 ORDER BY i.issue_id DESC
             """, conn)
             st.dataframe(df_audit, use_container_width=True)
+            
+          
