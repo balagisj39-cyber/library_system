@@ -73,6 +73,31 @@ def add_book(title: str, author: str, category: str):
         conn.commit()
         print(f"[OK] Book '{title}' added successfully with ID: {cursor.lastrowid}")
 
+def remove_book(book_id: int):
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        
+        # 1. Check if the book exists
+        cursor.execute("SELECT title, is_available FROM books WHERE book_id = ?", (book_id,))
+        book = cursor.fetchone()
+        
+        if not book:
+            print(f"[ERROR] Book ID {book_id} not found.")
+            return
+
+        # 2. Prevent deletion if the book is currently checked out
+        if book["is_available"] == 0:
+            print(f"[DENIED] Cannot remove '{book['title']}' because it is currently issued to a student.")
+            return
+
+        # 3. Perform deletion safely
+        try:
+            cursor.execute("DELETE FROM books WHERE book_id = ?", (book_id,))
+            conn.commit()
+            print(f"[OK] Book '{book['title']}' (ID: {book_id}) successfully removed from the system.")
+        except sqlite3.IntegrityError:
+            print(f"[ERROR] Cannot delete this book because it has active history records linked to it.")
+
 def search_books(query: str):
     with get_connection() as conn:
         cursor = conn.cursor()
@@ -249,9 +274,9 @@ def main():
         print("5. Return Book (Records Return Date & Fines)")
         print("6. Show Currently Borrowed Books")
         print("7. Show Full Date Audit Log")
-        print("8. Exit")
-
-        choice = input("Select an option (1-8): ").strip()
+        print("8. Remove Book")  
+        print("9. Exit")         8
+        choice = input("Select an option (1-9): ").strip() 
 
         if choice == "1":
             name = input("Enter Student Name: ").strip()
@@ -282,7 +307,13 @@ def main():
             list_borrowed_books()
         elif choice == "7":
             show_full_audit_history()
-        elif choice == "8":
+        elif choice == "8": 
+            try:
+                b_id = int(input("Enter Book ID to Remove: ").strip())
+                remove_book(b_id)
+            except ValueError:
+                print("[ERROR] Invalid input. ID must be an integer.")
+        elif choice == "9": 
             print("Exiting System. Goodbye!")
             break
         else:
